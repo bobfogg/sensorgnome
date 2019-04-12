@@ -97,6 +97,9 @@ GOTO="done"
 LABEL="not_disk"
 ################# START OTHER DEVICE DETECTION #################
 
+## Detect CTT Radios
+ACTION=="add",SUBSYSTEMS=="usb",ATTRS{idVendor}=="239a",ATTRS{idProduct}=="800c",ENV{MYDEVNAME}="CTTradio",GOTO="CTTradio"
+
 ## detect funcube dongles
 ACTION=="add",SUBSYSTEMS=="usb",ATTRS{idVendor}=="04d8",ATTRS{idProduct}=="fb56",ENV{MYDEVNAME}="funcubePro",GOTO="usbaudio"
 ACTION=="add",SUBSYSTEMS=="usb",ATTRS{idVendor}=="04d8",ATTRS{idProduct}=="fb31",ENV{MYDEVNAME}="funcubeProPlus",GOTO="usbaudio"
@@ -115,6 +118,13 @@ ACTION=="add",SUBSYSTEMS=="sound",ENV{MYDEVNAME}="usbAudio",GOTO="usbaudio"
 
 ## otherwise, see whether it's an rtlsdr dongle
 GOTO="rtlsdr"
+
+# Add CTT Recevier Device Rules - create symlink for sensorgnome
+LABEL="CTTradio"
+IMPORT{program}="/bin/sh -c '(sleep 2; /bin/stty =F /dev/ttyUSB%n 115200 raw &);/usr/bin/awk -f /home/pi/proj/sensorgnome/scripts/get_usg_device_port_number.awk %p"
+MODE:="0666"
+ENV{PORT_NUM}!="",SYMLINK+="sensorgnome/CTTRadio.port=%E{PORT_NUM}"
+GOTO="done"
 
 # adafruit GPS hat for Pi
 LABEL="wired_gps"
