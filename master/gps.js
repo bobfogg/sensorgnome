@@ -29,13 +29,14 @@ function GPS (matron) {
     // "T" = 0.000001 second
 
     // self-bound closures for callbacks
-    this.this_GPSSetClock = this.GPSSetClock.bind(this); // closure for callbacks
     this.this_gpsdReply = this.gpsdReply.bind(this); 
     this.this_conError = this.conError.bind(this);
     this.this_connect = this.connect.bind(this);
     this.this_getFix = this.getFix.bind(this);
+
+    /* Do not interrupt chrony - let chrony adjust time between GPS, network and RTC
     // spawn a process to wait for a clock adjustment to within 1 second of GPS time
-    this.waitForClockSync();
+    */
     // connect to gpsd
     this.connect();
 };
@@ -107,22 +108,6 @@ GPS.prototype.start = function(fixInterval) {
     if (this.interval)
         clearInterval(this.interval);
     this.interval = setInterval(this.this_getFix, fixInterval * 1000, this);
-};
-
-GPS.prototype.GPSSetClock = function(code, stdout, stderr) {
-    if (! code) {
-        this.GPSHasSetClock = true;
-        // extract the number
-        this.chronyChild = null;
-        // we've now obtained one more digit of clock precision
-        ++this.clockSyncDigits;
-        this.matron.emit("gpsSetClock", this.clockSyncDigits, Number(stdout.toString().split(/,/)[2].split(/: /)[1]))
-        // no point trying to go past 1 us precision
-        if (this.clockSyncDigits < 6)
-            this.waitForClockSync();
-    } else {
-        this.waitForClockSync();
-    }
 };
 
 exports.GPS = GPS;
