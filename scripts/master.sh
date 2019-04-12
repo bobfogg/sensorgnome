@@ -17,6 +17,6 @@ cd /home/pi/proj/sensorgnome/master
 export NODE_ENV=production VAMP_PATH=/home/pi/vamp NODE_PATH=/usr/local/lib/node_modules LC_ALL="C.UTF-8"
 for (( ; ; )) do
 nice -n -15 /usr/bin/nodejs ./master.js > /var/log/nodelog.txt 2>&1
-killall -KILL rtl_tcp vamp-alsa-host chronyc
+#killall -KILL rtl_tcp vamp-alsa-host 
 sleep 60
 done
