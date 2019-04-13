@@ -35,6 +35,8 @@ foreach my $dev (@devlist) {
         my @info=`cat /proc/asound/card$attrs{alsaDev}/stream0`;
         my ($fullname) = split(/ at usb-musb/, $info[0]);
         $hub_devs{$attrs{port}} = {( name => $fullname, type => "usbAudio", alsa_dev => $attrs{alsaDev})};
+    } elsif ($devname =~ /CornellTagXCVR/) {
+        $hub_devs{$attrs{port}} = {(name => "CTT Radio", type=> "CornellTagXCVR")};
     } elsif ($devname =~ /disk/) {
         chomp(my $usage = `df /media/$attrs{mount} | tail -1l`);
         my ($SKIP,$size,$used,$avail,$used_percent) = split(/[ \t]+/, $usage);
