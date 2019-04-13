@@ -139,10 +139,17 @@ WebServer.prototype.pushDeviceInfo = function (err, stdout, stderr) {
         // splice in any ".settings" fields from HubMan
         // FIXME: HubMan should be maintaining all of this
 
+        console.log('dev info', info);
         var devs = HubMan.getDevs();
         for (d in devs) {
-            if (info[d])
-                info[d].settings = devs[d].settings
+            if (info[d]) {
+                try {
+                    info[d].settings = devs[d].settings;
+                } catch(err) {
+                    console.log('error sith this settings');
+                    info[d].settings = None;
+                }
+            }
         }
 	this.sock.emit('devinfo', info);
     }
