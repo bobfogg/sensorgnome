@@ -147,7 +147,7 @@ WebServer.prototype.pushDeviceInfo = function (err, stdout, stderr) {
                     info[d].settings = devs[d].settings;
                 } catch(err) {
                     console.log('error sith this settings');
-                    info[d].settings = None;
+                    info[d].settings = null;
                 }
             }
         }
