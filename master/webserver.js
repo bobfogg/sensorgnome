@@ -382,7 +382,7 @@ WebServer.prototype.start = function () {
 
     this.app.get('/raw_audio', this.this_getRawAudio);
 
-    this.server.listen(80, function() {
+    this.server.listen(8000, function() {
         console.log("SensorGnome server listening on port %d in %s mode", self.server.address().port, self.app.settings.env);
     });
 
