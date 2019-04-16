@@ -99,12 +99,6 @@ GOTO="done"
 LABEL="not_disk"
 ################# START OTHER DEVICE DETECTION #################
 
-## detect Cornell tag XCVR 
-ACTION=="add",SUBSYSTEM=="tty",ATTRS{idVendor}=="0403",ATTRS{idProduct}=="6001",ENV{MYDEVNAME}="CornellTagXCVR",GOTO="CornellTagXCVR"
-ACTION=="add",SUBSYSTEM=="tty",ATTRS{idVendor}=="0403",ATTRS{idProduct}=="6010",ENV{MYDEVNAME}="CornellTagXCVR",GOTO="CornellTagXCVR"
-ACTION=="add",SUBSYSTEM=="tty",ATTRS{idVendor}=="10c4",ATTRS{idProduct}=="ea60",ENV{MYDEVNAME}="CornellTagXCVR",GOTO="CornellTagXCVR"
-ACTION=="add",SUBSYSTEM=="tty",ATTRS{idVendor}=="239a",ATTRS{idProduct}=="800c",ENV{MYDEVNAME}="CornellTagXCVR",GOTO="CornellTagXCVR"
-
 ## detect funcube dongles
 ACTION=="add",SUBSYSTEMS=="usb",ATTRS{idVendor}=="04d8",ATTRS{idProduct}=="fb56",ENV{MYDEVNAME}="funcubePro",GOTO="usbaudio"
 ACTION=="add",SUBSYSTEMS=="usb",ATTRS{idVendor}=="04d8",ATTRS{idProduct}=="fb31",ENV{MYDEVNAME}="funcubeProPlus",GOTO="usbaudio"
