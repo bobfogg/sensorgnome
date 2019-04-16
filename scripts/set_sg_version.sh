@@ -14,7 +14,7 @@ where VERSION_NAME is the set of arguments passed to this script.
 
 This version string is printed, and written to the file
 
-   /boot/uboot/SENSORGNOME_VERSION.TXT
+   /data/sg_files/SENSORGNOME_VERSION.TXT
 
 This script is intended for sensorgnome developers when they are about to
 create a new release using liwixi (see https://github.com/jbrzusto/liwixi)
@@ -25,4 +25,4 @@ EOF
 fi
 
 VERSION="`date +'%s,%Y-%m-%d %H:%M:%S'`,$*"
-echo $VERSION | tee /boot/uboot/SENSORGNOME_VERSION.TXT
+echo $VERSION | tee /data/sg_files/SENSORGNOME_VERSION.TXT

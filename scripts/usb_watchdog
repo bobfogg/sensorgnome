@@ -12,7 +12,7 @@
 
 # if explicitly prevented, do not do this
 
-if grep -q NO_USB_WATCHDOG_REBOOT /boot/uboot/deployment.txt; then
+if grep -q NO_USB_WATCHDOG_REBOOT /data/sg_files/deployment.txt; then
 #   echo user specified NO_USB_WATCHDOG_REBOOT
    exit 0
 fi

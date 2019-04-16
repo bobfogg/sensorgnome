@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- Mode:Python; indent-tabs-mode:nil; tab-width:4 -*-
 
-# If /boot/uboot/network.txt exists, grab an essid and passphrase
+# If /data/sg_files/network.txt exists, grab an essid and passphrase
 # from it and set up the SG as a WiFi client. unless it contains
 # a line like WiFiClient = no
-# If /boot/uboot/no_network.txt exists, set up the SGPi as a
+# If /data/sg_files/no_network.txt exists, set up the SGPi as a
 # WiFi hotspot.
 # If neither file exists, do nothing.
 
@@ -22,7 +22,7 @@ def force_symlink(file1, file2):
             os.symlink(file1, file2)
 
 
-WIFI_CONF_FILE = "/boot/uboot/network.txt"
+WIFI_CONF_FILE = "/data/sg_files/network.txt"
 CLIENT_INTERFACES_FILE = "/etc/network/wifi_client"
 HOTSPOT_INTERFACES_FILE = "/etc/network/wifi_hotspot"
 INTERFACES_WIFI_LINK = "/etc/network/interfaces.d/wifi"

@@ -117,7 +117,7 @@ function toggleWiFi() {
     if (wifi) {
         b.stopBlinker(wifi);
         b.set(0);
-        // turn off WiFi hotspot; if configured in /boot/uboot/network.txt,
+        // turn off WiFi hotspot; if configured in /data/sg_files/network.txt,
         // this will switch over to operation as a wifi client
         Child_process.execFile(Wifi_Hotspot, ["off"]);
         wifi = 0;

@@ -44,10 +44,10 @@ Matron = require('./matron.js');
 TheMatron = new Matron.Matron();
 
 // kludgy options for transitional usage
-TheMatron.tagDBFile = Fs.existsSync("/boot/uboot/SG_tag_database.sqlite") ?
-    "/boot/uboot/SG_tag_database.sqlite"
+TheMatron.tagDBFile = Fs.existsSync("/data/sg_files/SG_tag_database.sqlite") ?
+    "/data/sg_files/SG_tag_database.sqlite"
     :
-    "/boot/uboot/SG_tag_database.csv";
+    "/data/sg_files/SG_tag_database.csv";
 
 // Load singleton objects
 GPS           = new (require('./gps.js').GPS)       (TheMatron);
@@ -64,7 +64,7 @@ RTLSDR        = require("./rtlsdr.js");
 
 Deployment = new (require("./deployment.js").Deployment) (
  [
-     "/boot/uboot/deployment.txt",
+     "/data/sg_files/deployment.txt",
      "/media/SD_card/deployment.txt",
      "/home/pi/proj/sensorgnome/plans/deployment.txt"
  ]);

@@ -5,8 +5,8 @@
 # then extract it to the root partition.  This allows for arbitray files
 # to be upgraded.
 
-UPDATE_FILE=/boot/uboot/sensorgnome_update.tar.bz2
-DISABLED_UPDATE_FILE=/boot/uboot/used_sensorgnome_update.tar.bz2
+UPDATE_FILE=/data/sg_files/sensorgnome_update.tar.bz2
+DISABLED_UPDATE_FILE=/data/sg_files/used_sensorgnome_update.tar.bz2
 if [[ ! -f $UPDATE_FILE ]]; then
     echo No file "$UPDATE_FILE" found on DOS partition of micro SD flash.
     exit 1

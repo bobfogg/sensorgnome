@@ -20,7 +20,7 @@ var bootCount = "" + (Fs.existsSync(bootCountFile) ?
                       0);
 bootCount = "00000".substring(0, 6 - bootCount.length) + bootCount;
 
-var versionFile = "/boot/uboot/SENSORGNOME_VERSION.TXT";
+var versionFile = "/data/sg_files/SENSORGNOME_VERSION.TXT";
 var version;
 
 if (Fs.existsSync(versionFile))

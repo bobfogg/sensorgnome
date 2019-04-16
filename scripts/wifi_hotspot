@@ -10,7 +10,7 @@ if [[ "$1" == "off" ]]; then
     sleep 2
     ifdown wlan0
     ifconfig wlan0 down
-    export NETCONF=/boot/uboot/network.txt;
+    export NETCONF=/data/sg_files/network.txt;
     # if network.txt exists, and does not have a line like 'WiFiClient = no', then
     # re-enable wifi client
 
@@ -23,7 +23,7 @@ if [[ "$1" == "off" ]]; then
         ifconfig wlan0 up
         ifup wlan0
         ## immediately try to reconnect to server
-        /home/pi/proj/sensorgnome/scripts/maintain_ssh_tunnel
+        #/home/pi/proj/sensorgnome/scripts/maintain_ssh_tunnel
     fi
 else
     killall autossh ssh

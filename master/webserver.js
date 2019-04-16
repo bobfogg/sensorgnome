@@ -62,7 +62,7 @@ WebServer.prototype.mainPage = function(req, res) {
 };
 
 WebServer.prototype.uploadSoftwareUpdate = function (req, res) {
-    var updateFileDest = "/boot/uboot/sensorgnome_update.tar.bz2";
+    var updateFileDest = "/data/sg_files/sensorgnome_update.tar.bz2";
     try {
 	Fs.unlinkSync(updateFileDest);
     } catch(e) {

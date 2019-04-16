@@ -7,7 +7,7 @@
 # this can be prevented by including the string "NO_AUTO_FCD_UPDATE" somewhere in
 # the deployment.txt file
 
-if ! grep -q NO_AUTO_FCD_UPDATE /boot/uboot/deployment.txt; then
+if ! grep -q NO_AUTO_FCD_UPDATE /data/sg_files/deployment.txt; then
     /home/pi/proj/sensorgnome/scripts/update_fcd_firmware
 fi
 
