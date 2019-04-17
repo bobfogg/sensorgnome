@@ -21,13 +21,13 @@ fi
 #   empty, we don't delete (since we're using rmdir) - the folder
 #   might contain real data.
 
-for dir in /media/disk*port*; do
-    if ( ! ( mount -l | grep -q " on $dir " ) ); then
-        if [ "$(ls -A $dir 2> /dev/null)" == "" ]; then
-            rmdir $dir
-        fi
-    fi
-done
+#for dir in /media/disk*port*; do
+#    if ( ! ( mount -l | grep -q " on $dir " ) ); then
+#        if [ "$(ls -A $dir 2> /dev/null)" == "" ]; then
+#            rmdir $dir
+#        fi
+#    fi
+#done
 
 # maybe do a software update
 # /home/pi/proj/sensorgnome/scripts/update_software.sh
