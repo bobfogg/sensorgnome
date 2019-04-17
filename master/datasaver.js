@@ -120,7 +120,7 @@ DataSaver.prototype.getStream = function(relpath, ext, pathOnly) {
     }
     or null if no stream can be opened.
 */
-    console.log('getting stream', relpath)
+    console.log('getting stream', relpath, ext, pathOnly)
     while (this.mountedDisks.length ) {
         try {
             var dirs = ["media", this.mountedDisks[0]].concat(relpath);
@@ -143,7 +143,9 @@ DataSaver.prototype.getStream = function(relpath, ext, pathOnly) {
         }
     }
     // no media disks - default at /data
-    relpath.unshift('data');
+    if (relpath[0] != 'data') {
+        relpath.unshift('data');
+    }
     var checkDirs = relpath.slice(0,(relpath.length-2));
     var check_path = "/" + checkDirs.join("/");
     console.log('about to make dirs', check_path);
