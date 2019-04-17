@@ -118,12 +118,6 @@ ACTION=="add",SUBSYSTEMS=="sound",ENV{MYDEVNAME}="usbAudio",GOTO="usbaudio"
 ## otherwise, see whether it's an rtlsdr dongle
 GOTO="rtlsdr"
 
-LABEL="CornellTagXCVR"
-IMPORT{program}="/bin/sh -c '(sleep 2; /bin/stty -F /dev/ttyUSB%n 115200 raw &);/usr/bin/awk -f /home/pi/proj/sensorgnome/scripts/get_usb_device_port_number.awk %p"
-MODE:="0666"
-ENV{PORT_NUM}!="",SYMLINK+="sensorgnome/CornellTagXCVR.port=%E{PORT_NUM}"
-GOTO="done
-
 # adafruit GPS hat for Pi
 LABEL="wired_gps"
 SYMLINK+="gps%n"
