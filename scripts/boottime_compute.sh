@@ -30,5 +30,5 @@ for dir in /media/disk*port*; do
 done
 
 # maybe do a software update
-/home/pi/proj/sensorgnome/scripts/update_software.sh
+# /home/pi/proj/sensorgnome/scripts/update_software.sh
 
