@@ -1,0 +1,7 @@
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.5/1-1.1.4.5.4 7
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.5/1-1.1.4.5.3 6
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.5/1-1.1.4.5.2 5
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.5/1-1.1.4.5.5 4
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.2 3
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.3 2
+/devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.4/1-1.1.4.4 1
