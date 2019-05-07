@@ -13,7 +13,7 @@ BEGIN {
     devpath = ARGV[1];
 ## DEBUGGING:    printf "Trying to get PORT_NUM for %s\n", devpath >> "/tmp/rules.txt";
 
-    port_name_file = "/dev/usb_hub_port_nums.txt";
+    port_name_file = "/data/usb_hub_rules.txt"
     port_number = "internal";
     while (0 < getline x < port_name_file) {
         split(x, A);
