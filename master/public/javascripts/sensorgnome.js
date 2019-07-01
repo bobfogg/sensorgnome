@@ -5,10 +5,13 @@
 */
 
 var load1 = function() {
+    let newlink = 'http://'+window.location.hostname+':3000';
+    document.querySelector('#station-link').setAttribute('href', newlink);
     loadScript("/socket.io/socket.io.js", load2);
 };
 var load2 = function() {
-    loadScript("/javascripts/jquery.js", load3);
+    console.log('laoding jquery');
+    loadScript("/javascripts/jquery-1.7.2.js", load3);
 };
 var load3 = function() {
     loadScript("/javascripts/jquery.form.min.js", load4);
