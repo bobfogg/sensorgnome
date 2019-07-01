@@ -13,6 +13,7 @@ MethodOverride = require('method-override'),
 ErrorHandler = require('errorhandler'),
 Io = require('socket.io'),
 Http = require('http');
+const WebSocket = require('ws');
 
 function WebServer(matron) {
     this.matron = matron;
@@ -51,6 +52,7 @@ function WebServer(matron) {
     this.this_requestedSetClock             = this.requestedSetClock.bind(this);
     this.this_softwareUpdateUploadCompleted = this.softwareUpdateUploadCompleted.bind(this);
     this.this_uploadSoftwareUpdate          = this.uploadSoftwareUpdate.bind(this);
+    this.this_broadcast                     = this.broadcast.bind(this);
 };
 
 // function for ignoring response from e.g. a childprocess
@@ -263,6 +265,14 @@ WebServer.prototype.requestedGPSFix = function () {
     GPS.getFix();
 };
 
+WebServer.prototype.broadcast = function(msg) {
+    this.websocket.clients.forEach((client) => {
+        if (client.readyState == WebSocket.OPEN) {
+            client.send(msg);
+        }
+    });
+};
+
 WebServer.prototype.sendMachineInfo = function () {
     if (this.sock) {
         this.sock.emit('machineinfo', {machine: Machine, uptime:Fs.readFileSync("/proc/uptime").toString()});
@@ -294,6 +304,9 @@ WebServer.prototype.pushData = function (data) {
     if (this.sock) {
         this.sock.emit('newVahData', data.toString());
     }
+    msg = data;
+    msg.msg_type='sg_data';
+    this.broadcast(data.toString());
 };
 
 WebServer.prototype.setParamError = function (data) {
@@ -339,6 +352,9 @@ WebServer.prototype.handleWebConnection = function (socket) {
 };
 
 WebServer.prototype.start = function () {
+    this.websocket = new WebSocket.Server({
+        port: 8002
+    });
 
     this.app = Express();
     this.app.use(Multer({ dest: './uploads/'}).any());
