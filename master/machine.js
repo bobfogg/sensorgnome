@@ -12,7 +12,8 @@
 
 */
 
-var machineID = Fs.readFileSync("/etc/beaglebone_id").toString().substring(0, 12);
+//var machineID = Fs.readFileSync("/etc/beaglebone_id").toString().substring(0, 12);
+var machineID = "CTT-"+JSON.parse(Fs.readFileSync("/etc/station-id").toString()).imei;
 var bootCountFile = "/etc/bootcount"
 var bootCount = "" + (Fs.existsSync(bootCountFile) ?
                       Number(Fs.readFileSync(bootCountFile).toString()) % (1000000)
