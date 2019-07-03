@@ -5,7 +5,7 @@
 */
 
 var load1 = function() {
-    let newlink = 'http://'+window.location.hostname+':3000';
+    let newlink = 'http://'+window.location.hostname;
     document.querySelector('#station-link').setAttribute('href', newlink);
     loadScript("/socket.io/socket.io.js", load2);
 };
