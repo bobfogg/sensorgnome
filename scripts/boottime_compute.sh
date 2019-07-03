@@ -1,5 +1,5 @@
 #!/bin/bash
-SENSORGNOME_UDEV_DIR = "/dev/sensorgnome/usb"
+SENSORGNOME_UDEV_DIR="/dev/sensorgnome/usb"
 if [[ -d $SENSORGNOME_UDEV_DIR ]]; then
     mkdir -p $SENSORGNOME_UDEV_DIR
 fi
