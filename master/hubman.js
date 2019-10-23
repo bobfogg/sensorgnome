@@ -71,6 +71,7 @@ HubMan = function(matron, root) {
     };
 
     rootChanged = function(event, filename) {
+        // console.log('root changed...', filename);
         var attr = attrOf(filename);
         if (! attr.port)
             return;  // not a USB-port device - we don't care

@@ -120,7 +120,7 @@ DataSaver.prototype.getStream = function(relpath, ext, pathOnly) {
     }
     or null if no stream can be opened.
 */
-    console.log('getting stream', relpath, ext, pathOnly)
+    /*
     while (this.mountedDisks.length ) {
         try {
             var dirs = ["media", this.mountedDisks[0]].concat(relpath);
@@ -142,15 +142,16 @@ DataSaver.prototype.getStream = function(relpath, ext, pathOnly) {
             this.mountedDisks = this.mountedDisks.slice(1);
         }
     }
+    */
     // no media disks - default at /data
     if (relpath[0] != 'data') {
         relpath.unshift('data');
     }
     var checkDirs = relpath.slice(0,(relpath.length-2));
     var check_path = "/" + checkDirs.join("/");
-    console.log('about to make dirs', check_path);
     this.ensureDirs(relpath, 1);
     var path = "/" + relpath.join("/") + ext;
+    // console.log('creating write stream', path);
     var sout = Fs.createWriteStream(path);
     return { stream: sout, path: path }
 };
@@ -165,7 +166,6 @@ DataSaver.prototype.ensureDirs = function(path, n) {
     for (i = 0; i < path.length - 1; ++i) {
         cumdir += "/" + path[i];
         if (i >= n) {
-            console.log(cumdir);
             if (! Fs.existsSync(cumdir))
                 Fs.mkdirSync(cumdir);
         }

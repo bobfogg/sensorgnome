@@ -24,10 +24,10 @@ Matron = function() {
 Util.inherits(Matron, Events.EventEmitter);
 
 Matron.prototype.devAdded = function(dev) {
-//DEBUG: console.log("Got devAdded " + JSON.stringify(dev) + "\n");
+ // console.log("Got matron devAdded " + JSON.stringify(dev) + "\n");
     var devPlan = Deployment.lookup(dev.attr.port, dev.attr.type);
     if (devPlan) {
-//DEBUG: console.log("Got plan " + JSON.stringify(devPlan));
+// console.log("Got plan " + JSON.stringify(devPlan));
         this.devices[dev.attr.port] = Sensor.getSensor(this, dev, devPlan);
     }
 };
