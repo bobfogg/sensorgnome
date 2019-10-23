@@ -43,7 +43,7 @@ RTLSDR = function(matron, dev, devPlan) {
     // e.g. /tmp/rtlsdr-1:4.sock for a device with usb path 1:4 (bus:dev)
     this.sockPath = "/tmp/rtlsdr-" + dev.attr.usbPath + ".sock";
     // path to rtl_tcp
-    this.prog = "/usr/bin/rtl_tcp";
+    this.prog = "/usr/local/bin/rtl_tcp";
 
     // hardware rate needed to achieve plan rate;
     // same algorithm as used in vamp-alsa-host/RTLSDRMinder::getHWRateForRate
@@ -163,16 +163,18 @@ RTLSDR.prototype.spawnServer = function() {
     usb_buffer_size = 512 * Math.ceil(usb_buffer_size / 512.0);
 
     var args = ["-p", this.sockPath, "-d", this.dev.attr.usbPath, "-s", this.hw_rate, "-B", usb_buffer_size];
-// DEBUG: console.log("RTLSDR about to spawn server with options: " + JSON.stringify(args) + "\n");
+    // console.log("RTLSDR about to spawn server with options: " + JSON.stringify(args) + "\n");
     var server = ChildProcess.spawn(this.prog, args);
     server.on("exit", this.this_serverDied);
     server.on("error", this.this_serverError);
     server.stdout.on("data", this.this_serverReady);
     server.stderr.on("data", this.this_logServerError);
+    console.log('spawned rtlsdr server');
     this.server = server;
 };
 
 RTLSDR.prototype.serverReady = function(data) {
+    console.log('rtlsdr server ready', data.toString());
     if (this.inDieHandler)
         return;
     if (data.toString().match(/Listening/)) {
@@ -252,6 +254,7 @@ RTLSDR.prototype.VAHdied = function() {
 
 RTLSDR.prototype.serverError = function(err) {
 // DEBUG: console.log("rtl_tcp server got error:\n" + JSON.stringify(err) + "\n")
+    console.error('rtlsdr server error', err);
 };
 
 RTLSDR.prototype.serverDied = function(code, signal) {
