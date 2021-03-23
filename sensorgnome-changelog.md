@@ -15,3 +15,4 @@
     - `/home/pi/.vamp/lotek-plugins.so`
 - Add `package.json` file for npm install / handle
 - Prevent Sensorgnome Updates (temporary via original tar.bz2 upload)
+- [VAMP](https://www.vamp-plugins.org/) C code (server and plugin) had minor compile time issues that were cleaned up
