@@ -157,7 +157,7 @@ WebServer.prototype.pushDeviceInfo = function (err, stdout, stderr) {
 }
 
 WebServer.prototype.deviceInfoChanged = function () {
-    ChildProcess.exec("/home/ctt/proj/sensorgnome/scripts/get_hub_devices.pl", this.this_pushDeviceInfo);
+    ChildProcess.exec("/lib/ctt/sensorgnome/sensorgnome/scripts/get_hub_devices.pl", this.this_pushDeviceInfo);
 }
 
 WebServer.prototype.pushLSFiles = function (err, stdout, stderr) {

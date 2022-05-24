@@ -66,7 +66,7 @@ Deployment = new (require("./deployment.js").Deployment) (
  [
      "/data/sg_files/deployment.txt",
      "/media/SD_card/deployment.txt",
-     "/home/ctt/proj/sensorgnome/plans/deployment.txt"
+     "/lib/ctt/sensorgnome/sensorgnome/plans/deployment.txt"
  ]);
 
 // replace "-" with "_" in deployment short label, so filenames
@@ -75,7 +75,7 @@ Deployment = new (require("./deployment.js").Deployment) (
 Deployment.shortLabel = Deployment.shortLabel.replace(/-/g,"_");
 
 TagFinder     = new (require('./tagfinder.js').TagFinder) (TheMatron,
-                                                           "/home/ctt/proj/find_tags/find_tags_unifile",
+                                                           "/lib/ctt/sensorgnome/find_tags/find_tags_unifile",
                                                            TheMatron.tagDBFile,
                                                            Deployment.module_options.find_tags.params
                                                           );

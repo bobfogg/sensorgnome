@@ -6,7 +6,7 @@ fi
 
 USB_HUB_UDEV_RULES="/data/usb_hub_rules.txt"
 if [[ -d $USB_HUB_UDEV_RULES ]]; then
-    ln -s /home/ctt/proj/sensorgnome/udev-rules/hub_COMPUTE_portnums.txt $USB_HUB_UDEV_RULES
+    ln -s /lib/ctt/sensorgnome/sensorgnome/udev-rules/hub_COMPUTE_portnums.txt $USB_HUB_UDEV_RULES
 fi
 
 BOOT_COUNT_FILE="/etc/bootcount"

@@ -57,7 +57,7 @@ ACTION=="add",GOTO="main"
 # the test for ENV{DELETED}=="1" below fails for them, which is desired because removal of a secondary USB hub needs
 # to change the port mapping rules (for port 4 of the Pi HUB).
 
-ACTION=="remove",ENV{MAJOR}=="189",IMPORT{program}="/usr/bin/awk -f /home/ctt/proj/sensorgnome/scripts/get_usb_device_port_number.awk %p",PROGRAM="/home/ctt/proj/sensorgnome/scripts/rmlinkandtarget.sh /dev/sensorgnome/usb/%E{PORT_NUM}",GOTO="done"
+ACTION=="remove",ENV{MAJOR}=="189",IMPORT{program}="/usr/bin/awk -f /lib/ctt/sensorgnome/sensorgnome/scripts/get_usb_device_port_number.awk %p",PROGRAM="/lib/ctt/sensorgnome/sensorgnome/scripts/rmlinkandtarget.sh /dev/sensorgnome/usb/%E{PORT_NUM}",GOTO="done"
 ACTION=="remove",GOTO="main"
 ACTION=="change",GOTO="main"
 IMPORT{program}="/bin/sh -c 'echo Unknown %p %k >> /tmp/rules.txt'"
@@ -69,7 +69,7 @@ ACTION!="add", GOTO="not_add_disk"
 # don't try to mount the root device itself
 KERNEL!="sd[a-z][0-9]",GOTO="done"
 IMPORT{program}="/sbin/blkid -o udev -p %N"
-IMPORT{program}="/usr/bin/awk -f /home/ctt/proj/sensorgnome/scripts/get_usb_device_port_number.awk %p"
+IMPORT{program}="/usr/bin/awk -f /lib/ctt/sensorgnome/sensorgnome/scripts/get_usb_device_port_number.awk %p"
 
 # Disk: import FS info
 ENV{mount_dir}="disk_port%E{PORT_NUM}-%n"
@@ -90,7 +90,7 @@ GOTO="done"
 LABEL="not_add_disk"
 # Clean up after removal
 ACTION!="remove",GOTO="done"
-IMPORT{program}="/usr/bin/awk -f /home/ctt/proj/sensorgnome/scripts/get_usb_device_port_number.awk %p"
+IMPORT{program}="/usr/bin/awk -f /lib/ctt/sensorgnome/sensorgnome/scripts/get_usb_device_port_number.awk %p"
 ENV{mount_dirs}="disk_port%E{PORT_NUM}*"
 ENV{PORT_NUM}!="",RUN+="/bin/sh -c 'for DEV in /media/%E{mount_dirs}; do umount -l $DEV; rmdir $DEV; done'"
 GOTO="done"
@@ -129,7 +129,7 @@ GOTO="done"
 # any usb audio device
 LABEL="usbaudio"
 MODE:="0666"
-IMPORT{program}="/usr/bin/awk -f /home/ctt/proj/sensorgnome/scripts/get_usb_device_port_number.awk %p"
+IMPORT{program}="/usr/bin/awk -f /lib/ctt/sensorgnome/sensorgnome/scripts/get_usb_device_port_number.awk %p"
 DRIVERS=="usb",KERNEL=="controlC[0-9]",SYMLINK+="sensorgnome/%E{MYDEVNAME}.port=%E{PORT_NUM}.alsaDev=%n.usbPath=%s{busnum}:%s{devnum}"
 GOTO="done"
 
@@ -269,7 +269,7 @@ ACTION=="remove",GOTO="done"
 LABEL="add_rtlsdr"
 MODE:="0666"
 ## record the usb bus path e.g. 1-1.2
-IMPORT{program}="/usr/bin/awk -f /home/ctt/proj/sensorgnome/scripts/get_usb_device_port_number.awk %p"
+IMPORT{program}="/usr/bin/awk -f /lib/ctt/sensorgnome/sensorgnome/scripts/get_usb_device_port_number.awk %p"
 ## get the sg device name, encoding some properties
 ENV{sgname}="/dev/sensorgnome/rtlsdr.port=%E{PORT_NUM}.usbPath=%s{busnum}:%s{devnum}.vidpid=%s{idVendor}:%s{idProduct}.mfg=%s{manufacturer}.prod=%s{product}"
 ## Touch a file in /dev/sensorgnome, rather than using SYMLINK+=
