@@ -30,6 +30,8 @@ VAH = function(matron, prog, sockName) {
     this.inDieHandler = false;
     this.connectCmdTimeout = null;
     this.connectDataTimeout = null;
+    this.checkRateTimer = null;
+    this.frames = {}; // last frame count&time for each plugin {at: Date.now(), frames:N, bad:N}
 
     // callback closures
     this.this_childDied        = this.childDied.bind(this);
@@ -47,14 +49,17 @@ VAH = function(matron, prog, sockName) {
     this.this_spawnChild       = this.spawnChild.bind(this);
     this.this_vahAccept        = this.vahAccept.bind(this);
     this.this_vahSubmit        = this.vahSubmit.bind(this);
+    this.this_vahStartStop     = this.vahStartStop.bind(this);
 
     matron.on("quit", this.this_quit);
     matron.on("vahSubmit", this.this_vahSubmit);
+    matron.on("vahStartStop", this.this_vahStartStop);
     matron.on("vahAccept", this.this_vahAccept);
 
     this.reapOldVAHandSpawn();
 }
 
+const checkRatesInterval = 20_000;
 
 VAH.prototype.childDied = function(code, signal) {
 //    console.log("VAH child died\n")
@@ -85,6 +90,8 @@ VAH.prototype.childDied = function(code, signal) {
 
 VAH.prototype.reapOldVAHandSpawn = function() {
     ChildProcess.execFile("/usr/bin/killall", ["-KILL", "vamp-alsa-host"], null, this.this_doneReaping);
+    if (this.checkRateTimer)
+        clearInterval(this.checkRateTimer);
 };
 
 VAH.prototype.doneReaping = function() {
@@ -102,6 +109,7 @@ VAH.prototype.spawnChild = function() {
     child.stdout.on("data", this.this_serverReady);
     child.stderr.on("data", this.this_logChildError);
     this.child = child;
+    this.frames = {};
 };
 
 
@@ -111,6 +119,10 @@ VAH.prototype.cmdSockConnected = function() {
 //        console.log("VAH about to submit queued: " + this.commandQueue[0] + "\n");
         this.cmdSock.write(this.commandQueue.shift());
     }
+    // start monitoring sample rates
+    // need to wait a long time for VAH to respond to the first list command (prob has to 
+    // start all plugin processes and get some OK from them)
+    this.checkRateTimer = setInterval(() => this.checkRates(), checkRatesInterval);
 };
 
 VAH.prototype.serverReady = function(data) {
@@ -196,6 +208,17 @@ VAH.prototype.vahSubmit = function (cmd, callback, callbackPars) {
 };
 
 
+// Submit a start/stop command to vah. Uses VahSubmit to send the command but then remembers
+// whether the port is on or off so that the rate check knows whether to expect data.
+VAH.prototype.vahStartStop = function (startstop, devLabel, callback, callbackPars) {
+    const cmd = startstop + " " + devLabel;
+    this.vahSubmit(cmd, callback, callbackPars);
+    // info from VAH comes back as 'pN', the 'p' stands for Plugin...
+    if (startstop == 'start') this.frames['p'+devLabel] = { at: Date.now(), frames: 0, bad: 0 };
+    else delete this.frames['p'+devLabel];
+};
+
+
 VAH.prototype.gotCmdReply = function (data) {
     // vamp-alsa-host replies are single JSON-formatted strings on a single line ending with '\n'
     // if multiple commands are submitted with a single call to vahSubmit,
@@ -256,6 +279,49 @@ VAH.prototype.getRawStream = function(devLabel, rate, doFM) {
 
     rawSock.start = function() {rawSock.write("rawStream " + devLabel + " " + rate + " " + doFM + "\n")};
     return rawSock;
+};
+
+VAH.prototype.checkRates = function() {
+    this.vahSubmit("list", reply => this.checkRatesReply(reply));
+};
+
+var logRateCnt = 0;
+
+VAH.prototype.checkRatesReply = function(reply) {
+    // check that all the plugins are producing data at the correct rate
+    const now = Date.now()
+    // console.log("VAH rates: ", JSON.stringify(reply, null, 2));
+    // console.log(`VAH frames: ${JSON.stringify(this.frames, null, 2)}`);
+    for (const p in this.frames) {
+        const fp = this.frames[p];
+        if (p in reply) {
+            var info = reply[p];
+            if (info.type != 'PluginRunner') {
+                console.log(`VAH checkRates: ${p} is not a plugin? ${JSON.stringify(info)}`);
+                continue;
+            }
+            this.matron.emit("vahFrames", p, now, info.totalFrames);
+            // calculate the rate
+            const dt = now - fp.at;
+            if (dt < checkRatesInterval*0.9) continue; // too soon to calculate stable rate
+            const df = info.totalFrames - fp.frames;
+            const rate = df / dt * 1000;
+            this.matron.emit("vahRate", p, now, rate);
+            // OK or not?
+            const ok = rate > info.rate*0.95 && rate < info.rate*1.05;
+            if (!ok || logRateCnt++ < 100)
+                console.log(`VAH rate for ${p}: nominal ${info.rate}, actual ${rate.toFixed(0)} frames/sec`);
+            if (!ok) fp.bad++; else fp.bad = 0;
+            if (fp.bad > 6) {
+                console.log(`VAH rate for ${p} is out of range: nominal ${info.rate}, actual ${rate.toFixed(0)} frames/sec`);
+                this.matron.emit("devStalled", p);
+            }
+        } else if (fp.frames > 0 || Date.now() - fp.at > 60_000) {
+            // plugin has died
+            console.log(`VAH plugin ${p} has died`);
+            this.matron.emit("devStalled", p);
+        }
+    }
 };
 
 exports.VAH = VAH;

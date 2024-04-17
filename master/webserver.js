@@ -147,7 +147,7 @@ WebServer.prototype.pushDeviceInfo = function (err, stdout, stderr) {
                 try {
                     info[d].settings = devs[d].settings;
                 } catch(err) {
-                    console.log('error sith this settings');
+                    console.log('error with devs settings');
                     info[d].settings = null;
                 }
             }
@@ -227,6 +227,7 @@ WebServer.prototype.pushVAHStatus = function (data) {
             if (ppsCount)
                 data.ppsCount = ppsCount[1] ? ppsCount[1] : 0;
             data.clockSyncDigits = GPS.clockSyncDigits;
+        data.stalls = Sensor.getStalls();
 	    this.sock.emit('vahstatus', data);
 	} catch (e) {
 	    console.log("Unable to display status of vamp-alsa-server process!");
