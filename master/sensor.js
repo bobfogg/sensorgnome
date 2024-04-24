@@ -28,6 +28,7 @@ Sensor = function(matron, dev, devPlan) {
     this.lastParSetting = null;
     this.rawFiling = false;  // are we supposed to be recording raw files?
     this.restartTimeout = null; // timeout event for restarting device, e.g. after a stall
+    if (!(this.dev.attr.port in stalls)) stalls[this.dev.attr.port] = 0; // count of hw_stalled for this device
 
     // callback closures
     this.this_init                   = this.init.bind(this);
@@ -44,6 +45,11 @@ Sensor = function(matron, dev, devPlan) {
     this.matron.on("requestSetParam", this.this_requestSetParam);
     this.matron.on("rawFileDone", this.this_rawFileDone);
 
+};
+
+let stalls = {};
+getStalls = function() {
+    return stalls;
 };
 
 getSensor = function(matron, dev, devPlan) {
@@ -112,14 +118,17 @@ Sensor.prototype.initDone = function() {
 
 Sensor.prototype.vahOpenReply = function (reply, self) {
     if (reply.error) {
-// DEBUG: console.log("sensor vahopenreply got " + JSON.stringify(reply) + "\n");
-        // schedule a retry on this device (every 10 seconds up to 10 times)
-        if (++self.numOpenRetries < 10) {
-            setTimeout (self.this_init, 10000);
-        } else {
-            self.matron.emit("bad", "Unable to open VAH device: " + JSON.stringify(self.dev));
-        }
-        return;
+      // DEBUG: console.log("sensor vahopenreply got " + JSON.stringify(reply) + "\n");
+      // console.log(`sensor vahopenreply port ${self.dev.attr.port} got ${JSON.stringify(reply)}\n`);
+      // schedule a retry on this device (every 10 seconds up to 10 times)
+      if (++self.numOpenRetries < 3) {
+        setTimeout(self.this_init, 10000);
+      } else {
+        self.matron.emit("bad", "Unable to open VAH device: " + JSON.stringify(self.dev));
+        stalls[self.dev.attr.port]++;
+        self.hw_stalled(); // don't give up, restart/reset the sensor
+      }
+      return;
     }
     self.isOpen = true;
 
@@ -221,10 +230,11 @@ Sensor.prototype.startStop = function(newState, oldState, self) {
         clearTimeout(self.restartTimeout);
         self.restartTimeout = null;
     }
-    var cmd = (self.on ? "start " : "stop ") + self.dev.attr.port;
     self.startStopRawFiler(self.on);
     self.hw_startStop(self.on);
-    self.matron.emit("vahSubmit", cmd, self.startStopReply, self);
+    var cmd = self.on ? "start" : "stop";
+    self.matron.emit("vahStartStop", cmd, self.dev.attr.port, self.startStopReply, self);
+    // self.matron.emit("vahSubmit", cmd, self.startStopReply, self);
 };
 
 Sensor.prototype.startStopReply = function(reply, self) {
@@ -233,6 +243,7 @@ Sensor.prototype.startStopReply = function(reply, self) {
 };
 
 Sensor.prototype.stalled = function() {
+    stalls[this.dev.attr.port]++;
     // call subclass function
     this.hw_stalled();
 };
@@ -268,3 +279,4 @@ Sensor.prototype.setParamReply = function(parSetting, code, stdout, stderr) {
 
 exports.Sensor = Sensor;
 exports.getSensor = getSensor;
+exports.getStalls = getStalls;
