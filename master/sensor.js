@@ -97,7 +97,7 @@ Sensor.prototype.devRemoved = function(dev) {
 
 Sensor.prototype.devStalled = function(vahDevLabel) {
     console.log("Got devStalled with " + vahDevLabel + "\n");
-    if (vahDevLabel = this.dev.attr.port)
+    if (vahDevLabel == this.dev.attr.port)
         this.stalled();
 };
 
