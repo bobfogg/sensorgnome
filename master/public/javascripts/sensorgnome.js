@@ -339,7 +339,7 @@ function onVahstatus (status) {
         timeTxt += (' <span id="pps" style="color: ' + (ppsOK ? "green" : "red") + '">PPS ' + (ppsOK ? "present" : "missing") + '</span>');
     }
     $('#sgtime').html(timeTxt);
-    var tabHdr="<table><tr><th>USB Port #</th><th>Hardware<br>Frame Rate (kHz)<br>Obs. / Set</th><th>Plugin<br>Frame Rate (kHz)<br>Obs. / Set</th><th>Channels</th><th>Plugin</th><th>Current<br>Feature Detection Rate<br>pulses per minute</th><th>Long-term<br>Feature Detection Rate<br>pulses per minute</th><th>Stalls</th><th>(Re)Started</th></tr>";
+    var tabHdr="<table><tr><th>USB Port #</th><th>Hardware<br>Frame Rate (kHz)<br>Obs. / Set</th><th>Plugin<br>Frame Rate (kHz)<br>Obs. / Set</th><th>Channels</th><th>Plugin</th><th>Current<br>Feature Detection Rate<br>pulses per minute</th><th>Long-term<br>Feature Detection Rate<br>pulses per minute</th><th>(Re)Started</th></tr>";
     var txt = "";
     for (n in status) {
         var item = status[n];
@@ -359,7 +359,7 @@ function onVahstatus (status) {
         for (p in fcd.plugins) {
             var plugin = fcd.plugins[p];
             var pulse_rate, hw_rate, tot_pulse_rate, sw_rate;
-            var oldfcd, stalls='?';
+            var oldfcd;
             if (VAHstatus)
                 oldfcd = VAHstatus[n];
             if (oldfcd) {
@@ -373,13 +373,7 @@ function onVahstatus (status) {
                 pulse_rate = plugin.totalFeatures / fcd.totalFrames * fcd.hwRate;
             }
             tot_pulse_rate = plugin.totalFeatures / fcd.totalFrames * fcd.hwRate;
-            if (n in status.stalls) stalls = status.stalls[n];
-            txt += "<tr><td>" + n + "</td><td>" + (hw_rate / 1000).toFixed(1) + " / " + (fcd.hwRate/1000).toFixed(1) + "</td><td>" +
-                (sw_rate / 1000).toFixed(1) + " / " + (plugin.rate / 1000).toFixed(1) + "</td><td>" +
-                fcd.numChan + "</td><td>" + p + "</td><td>"+ (pulse_rate * 60).toFixed(4) + "</td><td>" +
-                (tot_pulse_rate * 60).toPrecision(6) + "</td><td>" +
-                stalls + "</td><td>" +
-                (new Date(fcd.startTimestamp * 1000)).toUTCString() + "</td></tr>";
+            txt += "<tr><td>" + n + "</td><td>" + (hw_rate / 1000).toFixed(1) + " / " + (fcd.hwRate/1000).toFixed(1) + "</td><td>" + (sw_rate / 1000).toFixed(1) + " / " + (plugin.rate / 1000).toFixed(1) + "</td><td>" + fcd.numChan + "</td><td>" + p + "</td><td>"+ (pulse_rate * 60).toFixed(4) + "</td><td>" + (tot_pulse_rate * 60).toPrecision(6) + "</td><td>" + (new Date(fcd.startTimestamp * 1000)).toUTCString() + "</td></tr>";
         }
     }
     if (txt != "")

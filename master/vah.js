@@ -30,8 +30,6 @@ VAH = function(matron, prog, sockName) {
     this.inDieHandler = false;
     this.connectCmdTimeout = null;
     this.connectDataTimeout = null;
-    this.checkRateTimer = null;
-    this.frames = {}; // last frame count&time for each plugin {at: Date.now(), frames:N, bad:N}
 
     // callback closures
     this.this_childDied        = this.childDied.bind(this);
@@ -49,11 +47,9 @@ VAH = function(matron, prog, sockName) {
     this.this_spawnChild       = this.spawnChild.bind(this);
     this.this_vahAccept        = this.vahAccept.bind(this);
     this.this_vahSubmit        = this.vahSubmit.bind(this);
-    this.this_vahStartStop     = this.vahStartStop.bind(this);
 
     matron.on("quit", this.this_quit);
     matron.on("vahSubmit", this.this_vahSubmit);
-    matron.on("vahStartStop", this.this_vahStartStop);
     matron.on("vahAccept", this.this_vahAccept);
 
     this.reapOldVAHandSpawn();
@@ -93,8 +89,6 @@ VAH.prototype.childDied = function(code, signal) {
 
 VAH.prototype.reapOldVAHandSpawn = function() {
     ChildProcess.execFile("/usr/bin/killall", ["-KILL", "vamp-alsa-host"], null, this.this_doneReaping);
-    if (this.checkRateTimer)
-        clearInterval(this.checkRateTimer);
 };
 
 VAH.prototype.doneReaping = function() {
@@ -112,7 +106,6 @@ VAH.prototype.spawnChild = function() {
     child.stdout.on("data", this.this_serverReady);
     child.stderr.on("data", this.this_logChildError);
     this.child = child;
-    this.frames = {};
 };
 
 
@@ -206,7 +199,6 @@ VAH.prototype.vahSubmit = function (cmd, callback, callbackPars) {
     }
 };
 
-
 // Submit a start/stop command to vah. Uses VahSubmit to send the command but then remembers
 // whether the port is on or off so that the rate check knows whether to expect data.
 VAH.prototype.vahStartStop = function (startstop, devLabel, callback, callbackPars) {
@@ -217,7 +209,6 @@ VAH.prototype.vahStartStop = function (startstop, devLabel, callback, callbackPa
         delete this.frames['p'+devLabel]; // remove plugin from list being monitored
     }
 };
-
 
 VAH.prototype.gotCmdReply = function (data) {
     // vamp-alsa-host replies are single JSON-formatted strings on a single line ending with '\n'
@@ -346,5 +337,4 @@ VAH.prototype.checkRatesReply = function(reply) {
         }
     }
 };
-
 exports.VAH = VAH;
