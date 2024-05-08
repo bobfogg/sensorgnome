@@ -31,6 +31,9 @@ VAH = function(matron, prog, sockName) {
     this.connectCmdTimeout = null;
     this.connectDataTimeout = null;
 
+    // initialize object to monitor frame rates
+    this.frames = {}
+
     // callback closures
     this.this_childDied        = this.childDied.bind(this);
     this.this_logChildError    = this.logChildError.bind(this);
