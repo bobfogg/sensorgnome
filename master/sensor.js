@@ -90,9 +90,10 @@ Sensor.prototype.devRemoved = function(dev) {
 };
 
 Sensor.prototype.devStalled = function(vahDevLabel) {
-    console.log("Got devStalled with " + vahDevLabel + "\n");
-    if (vahDevLabel == this.dev.attr.port)
+    if (vahDevLabel == 'p'+this.dev.attr.port) {
+        console.log("Got devStalled with " + vahDevLabel + "\n");
         this.stalled();
+    }
 };
 
 Sensor.prototype.init = function() {
