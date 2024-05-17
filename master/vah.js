@@ -296,7 +296,7 @@ VAH.prototype.checkRatesReply = function(reply) {
     const minFct = 1 - boundsPCT/100
     const maxFct = 1 + boundsPCT/100
     // console.log("VAH rates: ", JSON.stringify(reply, null, 2));
-    console.log(`VAH frames: ${JSON.stringify(this.frames, null, 2)}`);
+    console.log(`VAH frames: ${JSON.stringify(this.frames)}`);
     for (const p in this.frames) {
         const fp = this.frames[p];
         if (p in reply) {
