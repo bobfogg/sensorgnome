@@ -305,7 +305,7 @@ VAH.prototype.checkRatesReply = function(reply) {
                 console.log(`VAH checkRates: ${p} is not a plugin? ${JSON.stringify(info)}`);
                 continue;
             }
-            console.log(`VAH info for ${p} at ${now} (dt=${now-fp.at}): ${JSON.stringify(info, null, 2)}`);
+            console.log(`VAH info for ${p} at ${now} (dt=${now-fp.at}): ${JSON.stringify(info)}`);
             this.matron.emit("vahFrames", p, now, info.totalFrames);
             // if fp.frames is null it just started and we don't have an initial frame count, so
             // get that (we used to set frames to 0 when starting but it takes a long time to actually
